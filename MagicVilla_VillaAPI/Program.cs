@@ -1,17 +1,23 @@
 //for SeriLog.aspnetcore and Serilog.SLinks.file for creating log file
 //using Serilog;
 
+using MagicVilla_VillaAPI.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
 //option => { option.ReturnHttpNotAcceptable = true; for not accepting formats like xml
 //.AddXmlDataContractSerializerFormatters() for accepting xml
 //.AddNewtonsoftJson() for using patch support JSONPATCH
 
+//for logging
 //Log.Logger = new LoggerConfiguration().MinimumLevel.Debug().WriteTo.File("log/villalogs.txt", rollingInterval: RollingInterval.Day).CreateLogger();
-
 //builder.Host.UseSerilog();
 
+//for database conection string and dbcontext 
+builder.Services.AddDbContext<ApplicationDbContext>(option => { option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultSQLConnection")); });
 builder.Services.AddControllers(
     //option => { option.ReturnHttpNotAcceptable = true; }
     ).AddNewtonsoftJson().AddXmlDataContractSerializerFormatters();
